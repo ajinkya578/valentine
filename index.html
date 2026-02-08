@@ -11,6 +11,7 @@
       align-items: center;
       background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
       font-family: Arial, sans-serif;
+      overflow: hidden;
     }
 
     .card {
@@ -21,7 +22,7 @@
       text-align: center;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       position: relative;
-      overflow: hidden;
+      z-index: 2;
     }
 
     .cat {
@@ -35,15 +36,7 @@
       margin-bottom: 25px;
     }
 
-    .buttons {
-      position: relative;
-      height: 120px;
-    }
-
     .yes {
-      position: absolute;
-      left: 30px;
-      top: 40px;
       background: #ff2f68;
       color: white;
       border: none;
@@ -51,14 +44,11 @@
       padding: 18px 35px;
       border-radius: 40px;
       cursor: pointer;
-      transform-origin: left center;
+      transform-origin: left center; /* GROW FROM LEFT */
       transition: transform 0.25s ease;
     }
 
     .no {
-      position: absolute;
-      right: 30px;
-      top: 45px;
       background: #e0e0e0;
       color: #333;
       border: none;
@@ -66,18 +56,15 @@
       padding: 8px 18px;
       border-radius: 20px;
       cursor: pointer;
+
+      position: fixed;   /* MOVE OVER WHOLE PAGE */
+      z-index: 10;
     }
 
     #gif {
       display: none;
       width: 200px;
       margin: 20px auto 0;
-    }
-
-    .note {
-      font-size: 12px;
-      color: #777;
-      margin-top: 10px;
     }
   </style>
 </head>
@@ -89,43 +76,37 @@
 
   <h1 id="question">Will you be my Valentine? 💖</h1>
 
-  <div class="buttons" id="buttons">
-    <button class="yes" id="yesBtn" onclick="yesClicked()">Yes 💘</button>
-    <button class="no" id="noBtn" onmouseover="moveNo()">No</button>
-  </div>
-
-  <p class="note">“No” seems a bit shy 😈</p>
+  <button class="yes" id="yesBtn" onclick="yesClicked()">Yes 💘</button>
 
   <img id="gif" src=https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUyaG05amw0eXQyaTAxMGwxZ25jMjJ5djdoejNvbmY4azhvdHF4cDhpYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qJzZ4APiDZQuJDY7vh/giphy.gif>
 </div>
+
+<button class="no" id="noBtn" onmouseover="moveNo()">No</button>
 
 <script>
   let scale = 1;
 
   function moveNo() {
     const no = document.getElementById("noBtn");
-    const area = document.querySelector(".buttons");
 
-    const maxX = area.clientWidth - no.offsetWidth;
-    const maxY = area.clientHeight - no.offsetHeight;
-
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+    // Move NO anywhere on screen
+    const x = Math.random() * (window.innerWidth - no.offsetWidth);
+    const y = Math.random() * (window.innerHeight - no.offsetHeight);
 
     no.style.left = x + "px";
     no.style.top = y + "px";
 
-    if (scale < 1.6) {
-      scale += 0.07;
+    // YES grows slowly (ONLY YES)
+    if (scale < 1.5) {
+      scale += 0.08;
       document.getElementById("yesBtn").style.transform = `scale(${scale})`;
     }
   }
 
   function yesClicked() {
     document.getElementById("question").innerText = "Yay! 💕 I knew it 😍";
-    document.getElementById("buttons").style.display = "none";
-    document.querySelector(".note").style.display = "none";
     document.getElementById("gif").style.display = "block";
+    document.getElementById("noBtn").style.display = "none";
   }
 </script>
 
