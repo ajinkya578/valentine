@@ -15,12 +15,13 @@
 
     .card {
       background: white;
-      width: 320px;
+      width: 340px;
       padding: 25px 20px 30px;
       border-radius: 25px;
       text-align: center;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       position: relative;
+      overflow: hidden; /* IMPORTANT */
     }
 
     .cat {
@@ -36,7 +37,7 @@
 
     .buttons {
       position: relative;
-      height: 90px;
+      height: 120px;
     }
 
     .yes {
@@ -47,7 +48,11 @@
       padding: 18px 35px;
       border-radius: 40px;
       cursor: pointer;
-      transition: transform 0.3s ease;
+      position: absolute;
+      left: 30px;           /* FIXED POSITION */
+      top: 35px;
+      transform-origin: left center; /* grows from left */
+      transition: transform 0.25s ease;
     }
 
     .no {
@@ -58,14 +63,14 @@
       padding: 8px 18px;
       border-radius: 20px;
       position: absolute;
-      right: 20px;
-      top: 25px;
+      right: 30px;
+      top: 40px;
       cursor: pointer;
     }
 
     #gif {
       display: none;
-      margin-top: 20px;
+      margin: 20px auto 0;
       width: 200px;
     }
 
@@ -92,6 +97,7 @@
     <p class="note">“No” seems a bit shy 😈</p>
 
     <img id="gif" src=https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUyaG05amw0eXQyaTAxMGwxZ25jMjJ5djdoejNvbmY4azhvdHF4cDhpYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qJzZ4APiDZQuJDY7vh/giphy.gif>
+  </div>>
   </div>
 
 <script>
@@ -99,14 +105,22 @@
 
   function moveNo() {
     const noBtn = document.getElementById("no");
-    const x = Math.random() * 200;
-    const y = Math.random() * 40;
+    const container = document.querySelector(".buttons");
+
+    const maxX = container.offsetWidth - noBtn.offsetWidth;
+    const maxY = container.offsetHeight - noBtn.offsetHeight;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 
-    // YES button grows
-    scale += 0.1;
-    document.getElementById("yesBtn").style.transform = `scale(${scale})`;
+    // YES grows slowly & neatly
+    if (scale < 1.6) {
+      scale += 0.08;
+      document.getElementById("yesBtn").style.transform = `scale(${scale})`;
+    }
   }
 
   function yesClicked() {
